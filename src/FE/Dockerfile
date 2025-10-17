@@ -16,8 +16,8 @@ COPY . .
 # Build the React app
 RUN npm run build
 
-# Expose the application port
-EXPOSE 3000
+# Expose the application port (CapRover sets PORT)
+EXPOSE 8080
 
-# Command to serve the React app
-CMD ["npx", "serve", "-s", "build"]
+# Command to serve the React app, binding to PORT env or 8080
+CMD ["npx", "serve", "-s", "build", "-l", "${PORT:-8080}"]
