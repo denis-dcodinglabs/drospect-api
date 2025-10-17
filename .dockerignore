@@ -1,2 +1,7 @@
 node_modules
-src/FE
+dist
+.git
+.gitignore
+Dockerfile
+npm-debug.log
+.cache
