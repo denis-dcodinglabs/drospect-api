@@ -1,0 +1,241 @@
+generator client {
+  provider      = "prisma-client-js"
+  binaryTargets = ["native", "linux-musl-arm64-openssl-3.0.x"]
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                String              @id @default(uuid())
+  username          String              @unique
+  email             String              @unique
+  password          String
+  firstName         String?
+  lastName          String?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+  isDeleted         Boolean             @default(false)
+  image             String?
+  createdBy         String?
+  clients           Client[]            @relation("createdBy")
+  creditTransaction CreditTransaction[]
+  payments          Payment[]
+  projects          Project[]
+  userRoles         UserRole[]
+  wallet            Wallet?
+}
+
+model Role {
+  id        Int        @id @default(autoincrement())
+  name      String
+  userRoles UserRole[]
+}
+
+model UserRole {
+  userId String
+  roleId Int
+  role   Role   @relation(fields: [roleId], references: [id])
+  user   User   @relation(fields: [userId], references: [id])
+
+  @@id([userId, roleId])
+}
+
+model Project {
+  id                     Int                     @id @default(autoincrement())
+  name                   String
+  description            String?
+  location               String?
+  latitude               Float?
+  longitude              Float?
+  megawatt               Float?
+  userId                 String
+  isactive               Boolean                 @default(true)
+  imagecounter           Int?
+  createdAt              DateTime                @default(now())
+  updatedAt              DateTime                @updatedAt
+  isinspected            Boolean                 @default(false)
+  drone                  Json?
+  allrgb                 Boolean                 @default(true)
+  creditTransaction      CreditTransaction[]
+  drospectInspection     DrospectInspection[]
+  images                 Images[]
+  PanelAuditLog          PanelAuditLog[]
+  panelStatistics        PanelStatistics[]
+  user                   User                    @relation(fields: [userId], references: [id])
+  thermalProcessingTasks ThermalProcessingTask[]
+}
+
+model Images {
+  id               Int      @id @default(autoincrement())
+  projectId        Int
+  isHealthy        Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  image            String
+  isInspected      Boolean  @default(false)
+  updatedAt        DateTime @updatedAt
+  latitude         Float?
+  longitude        Float?
+  altitude         String?
+  isFixed          Boolean? @default(false)
+  panelInformation Json?
+  imageName        String?
+  rgb              Boolean? @default(false)
+  isDeleted        Boolean  @default(false)
+  processingStatus String?
+  thumbnailUrl     String?
+  project          Project  @relation(fields: [projectId], references: [id])
+}
+
+model PanelAuditLog {
+  id          Int      @id @default(autoincrement())
+  projectId   Int
+  totalImages Int      @default(0)
+  action      String
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  project     Project  @relation(fields: [projectId], references: [id])
+}
+
+model PanelStatistics {
+  id              Int      @id @default(autoincrement())
+  projectId       Int
+  totalImages     Int      @default(0)
+  healthyPanels   Int      @default(0)
+  unhealthyPanels Int      @default(0)
+  inspectedPanels Int      @default(0)
+  createdAt       DateTime @default(now())
+  updatedAt       DateTime @updatedAt
+  project         Project  @relation(fields: [projectId], references: [id])
+}
+
+model Client {
+  id              String    @id @default(uuid())
+  firstName       String
+  lastName        String
+  email           String
+  website         String
+  description     String
+  photo           String
+  is_active       Boolean   @default(true)
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+  createdByUserId String
+  deletedAt       DateTime?
+  createdByUser   User      @relation("createdBy", fields: [createdByUserId], references: [id])
+}
+
+model Comment {
+  id        Int      @id @default(autoincrement())
+  comment   String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  imageId   Int
+  username  String
+}
+
+model Wallet {
+  id        String   @id @default(uuid())
+  userId    String   @unique
+  credits   Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Payment {
+  id        String   @id @default(uuid())
+  userId    String
+  credits   Int
+  packageId String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  status    String
+  package   Package? @relation(fields: [packageId], references: [id])
+  user      User     @relation(fields: [userId], references: [id])
+}
+
+model Package {
+  id          String    @id @default(uuid())
+  name        String    @unique
+  credits     Int
+  description String
+  price       Int
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  payments    Payment[]
+}
+
+model CreditTransaction {
+  id              String   @id @default(uuid())
+  projectId       Int
+  userId          String
+  credits         Int
+  projectName     String?
+  inspectedPanels Int?
+  createdAt       DateTime @default(now())
+  project         Project  @relation(fields: [projectId], references: [id])
+  user            User     @relation(fields: [userId], references: [id])
+}
+
+model DrospectInspection {
+  id                      Int       @id @default(autoincrement())
+  projectId               Int?
+  totalImages             Int       @default(0)
+  action                  String   // made nullable to match DB
+  createdAt               DateTime  @default(now())
+  updatedAt               DateTime @updatedAt // made nullable to match DB
+  limit                   Int?
+  model                   String?
+  page                    Int?
+  status                  String
+  completedAt             DateTime?
+  inspecting              Boolean   @default(false)
+  modelType               Int?
+  scopitoProjectId        Int?
+  source                  String    @default("DROSPECT")
+  startedAt               DateTime?
+  rgbImages               Int?
+  thermalImages           Int?
+  healthyImages           Int?
+  unhealthyImages         Int?
+  processedImages         Int?
+  processingDetails       String?
+  errorMessage            String?
+  processingEfficiency    Float?
+  pendingNotificationSent Boolean   @default(false)
+
+  project                 Project?  @relation(fields: [projectId], references: [id])
+
+  @@map("DrospectInspection") // optional, ensures Prisma uses the exact DB table name
+}
+
+
+model ThermalProcessingTask {
+  id             String    @id @default(uuid())
+  projectId      Int
+  status         String
+  progress       Int       @default(0)
+  imagesCount    Int       @default(0)
+  nodeOdmOptions Json?
+  resultUrl      String?
+  errorMessage   String?
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  model          String?
+  bounds         Json?
+  cogCreatedAt   DateTime?
+  cogUrl         String?
+  maxZoom        Int?
+  minZoom        Int?
+  tileServiceUrl String?
+  panelData      Json?
+  webhook        String?
+  project        Project   @relation(fields: [projectId], references: [id])
+}
+
+model ScopitoInspection {
+  id Int @id @default(autoincrement())
+}

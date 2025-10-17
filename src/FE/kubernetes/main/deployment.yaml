@@ -1,0 +1,36 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: drospect-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: drospect-frontend
+  template:
+    metadata:
+      labels:
+        app: drospect-frontend
+    spec:
+      serviceAccountName: gcr-access-sa
+      containers:
+        - name: drospect-frontend
+          image: gcr.io/solar-panel-detection-1/solar-panel-web-fe:latest
+          ports:
+            - containerPort: 3000 # Match the port exposed in your Dockerfile
+          env:
+            - name: REACT_APP_BASEURL
+              valueFrom:
+                secretKeyRef:
+                  name: my-app-secrets
+                  key: REACT_APP_BASEURL
+            - name: REACT_APP_STRIPE_PUBLISHABLE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-publishable-key
+                  key: REACT_APP_STRIPE_PUBLISHABLE_KEY
+            - name: REACT_APP_MAPBOX_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: mapbox-token-secret
+                  key: MAPBOX_TOKEN

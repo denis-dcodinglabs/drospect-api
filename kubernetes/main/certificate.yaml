@@ -1,0 +1,14 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: drospect-cert
+  namespace: default
+spec:
+  secretName: drospect-cert
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: drospect.ai
+  dnsNames:
+    - drospect.ai
+    - www.drospect.ai

@@ -1,0 +1,384 @@
+/* Heat Map Animations */
+.leaflet-heatmap-layer {
+  animation: heatMapFadeIn 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes heatMapFadeIn {
+  0% {
+    opacity: 0;
+    transform: scale(0.8) rotate(1deg);
+    filter: blur(2px);
+  }
+  60% {
+    opacity: 0.8;
+    transform: scale(1.02) rotate(0deg);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1) rotate(0deg);
+    filter: blur(0px);
+  }
+}
+
+/* Enhanced pulsing animation for high intensity areas */
+.leaflet-heatmap-layer canvas {
+  animation: heatPulse 4s ease-in-out infinite;
+  transition: all 0.3s ease;
+}
+
+@keyframes heatPulse {
+  0%,
+  100% {
+    opacity: 0.85;
+    transform: scale(1);
+  }
+  25% {
+    opacity: 0.95;
+    transform: scale(1.005);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.01);
+  }
+  75% {
+    opacity: 0.95;
+    transform: scale(1.005);
+  }
+}
+
+/* Compact Heat Map Controls Animations */
+.heat-control-panel-compact {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.heat-control-panel {
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  backdrop-filter: blur(10px);
+}
+
+.heat-control-panel.collapsed {
+  transform: translateY(-5px);
+  opacity: 0.95;
+  scale: 0.98;
+}
+
+.heat-palette-preview {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border: 2px solid transparent;
+  position: relative;
+  overflow: hidden;
+}
+
+.heat-palette-preview::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transition: left 0.5s ease;
+}
+
+.heat-palette-preview:hover::before {
+  left: 100%;
+}
+
+.heat-palette-preview:hover {
+  transform: scale(1.05) translateY(-2px);
+  border-color: rgba(255, 255, 255, 0.3);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.4), 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.heat-palette-preview.active {
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.3), 0 8px 16px rgba(0, 0, 0, 0.4),
+    0 0 30px rgba(59, 130, 246, 0.4);
+  transform: scale(1.02);
+}
+
+/* Temperature stats animation */
+.temp-stats {
+  animation: statsSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes statsSlideIn {
+  0% {
+    transform: translateX(-30px) translateY(10px);
+    opacity: 0;
+    filter: blur(4px);
+  }
+  60% {
+    transform: translateX(5px) translateY(-2px);
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateX(0) translateY(0);
+    opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+/* Gradient legend animation */
+.gradient-legend {
+  position: relative;
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.gradient-legend:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+}
+
+.gradient-legend::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.4),
+    transparent
+  );
+  animation: shimmer 3s ease-in-out infinite;
+}
+
+@keyframes shimmer {
+  0% {
+    left: -100%;
+    opacity: 0;
+  }
+  50% {
+    opacity: 1;
+  }
+  100% {
+    left: 100%;
+    opacity: 0;
+  }
+}
+
+/* Smooth transitions for mode switches */
+.heat-mode-transition {
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Enhanced glow effect for active temperature zones */
+.leaflet-heatmap-layer.high-intensity {
+  filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.8))
+    drop-shadow(0 0 30px rgba(255, 100, 0, 0.4))
+    drop-shadow(0 0 45px rgba(255, 0, 0, 0.2));
+  animation: intensityGlow 3s ease-in-out infinite;
+}
+
+@keyframes intensityGlow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 15px rgba(255, 0, 0, 0.8))
+      drop-shadow(0 0 30px rgba(255, 100, 0, 0.4));
+  }
+  50% {
+    filter: drop-shadow(0 0 20px rgba(255, 0, 0, 1))
+      drop-shadow(0 0 40px rgba(255, 100, 0, 0.6))
+      drop-shadow(0 0 60px rgba(255, 0, 0, 0.3));
+  }
+}
+
+/* Control button animations */
+.heat-control-button {
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+.heat-control-button::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.2), transparent);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.4s ease, height 0.4s ease;
+}
+
+.heat-control-button:hover::before {
+  width: 200%;
+  height: 200%;
+}
+
+.heat-control-button:active {
+  transform: scale(0.97);
+}
+
+/* Enhanced toggle switch styling */
+.heat-toggle {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 30px;
+}
+
+.heat-toggle input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.heat-toggle-slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #374151, #1f2937);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 30px;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.3), 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.heat-toggle-slider:before {
+  position: absolute;
+  content: "";
+  height: 22px;
+  width: 22px;
+  left: 4px;
+  bottom: 4px;
+  background: linear-gradient(135deg, #ffffff, #f3f4f6);
+  transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50%;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.heat-toggle input:checked + .heat-toggle-slider {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.2),
+    0 2px 8px rgba(59, 130, 246, 0.4), 0 0 20px rgba(59, 130, 246, 0.3);
+}
+
+.heat-toggle input:checked + .heat-toggle-slider:before {
+  transform: translateX(30px);
+  background: linear-gradient(135deg, #ffffff, #e0f2fe);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4), 0 0 0 2px rgba(59, 130, 246, 0.2);
+}
+
+/* Compact toggle switch styling */
+.heat-toggle-small {
+  position: relative;
+  display: inline-block;
+  width: 40px;
+  height: 20px;
+}
+
+.heat-toggle-small input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.heat-toggle-slider-small {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #374151, #1f2937);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 20px;
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.3), 0 1px 2px rgba(0, 0, 0, 0.2);
+}
+
+.heat-toggle-slider-small:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 3px;
+  bottom: 3px;
+  background: linear-gradient(135deg, #ffffff, #f3f4f6);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  border-radius: 50%;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.1);
+}
+
+.heat-toggle-small input:checked + .heat-toggle-slider-small {
+  background: linear-gradient(135deg, #3b82f6, #1d4ed8);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.2),
+    0 1px 4px rgba(59, 130, 246, 0.4), 0 0 12px rgba(59, 130, 246, 0.3);
+}
+
+.heat-toggle-small input:checked + .heat-toggle-slider-small:before {
+  transform: translateX(20px);
+  background: linear-gradient(135deg, #ffffff, #e0f2fe);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(59, 130, 246, 0.2);
+}
+
+/* Map overlay animations */
+.map-overlay-enter {
+  animation: overlaySlideIn 0.4s ease-out;
+}
+
+@keyframes overlaySlideIn {
+  0% {
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+  }
+  100% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* Responsive hover effects for mobile */
+@media (hover: none) {
+  .heat-palette-preview:hover {
+    transform: none;
+    border-color: transparent;
+    box-shadow: none;
+  }
+
+  .heat-control-button:hover::before {
+    width: 0;
+    height: 0;
+  }
+}
+
+/* Enhanced focus states for accessibility */
+.heat-toggle:focus-within .heat-toggle-slider,
+.heat-toggle-small:focus-within .heat-toggle-slider-small {
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.5),
+    inset 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.heat-control-button:focus-within {
+  outline: 2px solid rgba(59, 130, 246, 0.5);
+  outline-offset: 2px;
+}
+
+/* Loading animation for heat map */
+.heat-map-loading {
+  animation: loadingPulse 1.5s ease-in-out infinite;
+}
+
+@keyframes loadingPulse {
+  0%,
+  100% {
+    opacity: 0.6;
+  }
+  50% {
+    opacity: 1;
+  }
+}

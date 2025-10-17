@@ -1,0 +1,114 @@
+PDF SERVICE REFACTOR PLAN
+==========================
+
+1. OPTIMIZATION PLAN (BEFORE SPLITTING)
+----------------------------------------
+
+a. General Code Optimizations
+- Move all constants (e.g., tokens, API keys) to an environment file, EXCEPT the logo URL (keep logo URL in code or config).
+- Remove inline magic numbers and replace with named constants.
+- Reduce code duplication in drawing methods (e.g., table rendering, color logic).
+- Extract repeated logic (e.g., color calculation, confidence formatting) into utility functions.
+- Remove or gate debug logs (e.g., console.log) with a debug flag or logger.
+- Optimize async image/map fetching by batching or caching where possible.
+- Add error handling for all async operations (fetches, service calls).
+- Document all public methods and complex private methods for maintainability.
+
+b. Architectural/Structural Optimizations
+- Separate concerns: Drawing, data fetching, analytics, and PDF orchestration should be clearly separated.
+- Reduce method size: Break up large methods (especially generateUnhealthyImagesPdf and large drawing methods) into smaller, focused helpers.
+- Type safety: Define and use interfaces/types for image, panel, and analytics data.
+- Testability: Make pure logic (analytics, formatting) testable outside of PDFKit context.
+
+
+2. REFACTOR & MODULARIZATION PLAN
+----------------------------------
+
+Proposed File/Component Structure:
+
+src/pdf/
+  pdf.service.ts           // Orchestrates PDF generation, high-level logic only
+  pdf-draw/
+    header.draw.ts         // Header drawing logic
+    summary.draw.ts        // Analytics summary, map, and loss box
+    panel-section.draw.ts  // Per-image panel section (image, map, info)
+    tables.draw.ts         // Table rendering (panel, enhanced, clean)
+    footer.draw.ts         // Footer drawing logic
+    detection.draw.ts      // Detection rectangles, color logic
+  pdf-utils/
+    analytics.util.ts      // Energy loss, delta, statistics, formatting
+    image.util.ts          // Image name formatting, image/map fetch helpers
+    color.util.ts          // Color calculation for deltas, confidence, issues
+    types.ts               // Shared types/interfaces for PDF data
+  pdf.config.ts            // Constants, URLs, tokens, style values
+
+How to Split the Code:
+
+1. Drawing Components (pdf-draw/)
+   - header.draw.ts: All logic for drawing the header, including logo, project name, and map link.
+   - summary.draw.ts: Draws the analytics summary, loss box, doughnut chart, and main map.
+   - panel-section.draw.ts: Handles drawing each image section, including image, map, and panel info.
+   - tables.draw.ts: All table rendering (panel, enhanced, clean).
+   - footer.draw.ts: Footer/logo drawing.
+   - detection.draw.ts: Drawing detection rectangles, color logic for rectangles.
+
+2. Utility Modules (pdf-utils/)
+   - analytics.util.ts: Energy loss calculations, delta/max/avg, statistics, and formula formatting.
+   - image.util.ts: Image name formatting, image/map fetching, and buffer helpers.
+   - color.util.ts: Color logic for deltas, confidence, and issue types.
+   - types.ts: All shared interfaces/types for images, panels, analytics, etc.
+
+3. Configuration
+   - pdf.config.ts: All constants, URLs, tokens, and style values (imported wherever needed).
+
+4. Main Service
+   - pdf.service.ts: 
+     - Only orchestrates the PDF generation process.
+     - Calls out to drawing and utility modules.
+     - Handles high-level flow, dependency injection, and error handling.
+     - Be under 300 lines, with no drawing or analytics logic inside.
+
+5. Update imports and dependency injection as needed.
+6. Test after each major step to ensure no breakage.
+7. (Optional) Add unit tests for pure utility modules.
+
+
+3. NAMING CONVENTIONS
+----------------------
+- Drawing files: *.draw.ts
+- Utility files: *.util.ts
+- Types: types.ts
+- Config: pdf.config.ts
+- All files in pdf-draw/ and pdf-utils/ should be private to the PDF module unless needed elsewhere.
+
+
+4. WHERE TO PUT THE FILES
+--------------------------
+- All new files go under src/pdf/ in the new subfolders pdf-draw/ and pdf-utils/.
+- Shared config in src/pdf/pdf.config.ts.
+- Types in src/pdf/pdf-utils/types.ts.
+
+
+5. SUMMARY TABLE OF MAIN RESPONSIBILITIES
+------------------------------------------
+| Responsibility         | New Location                |
+|------------------------|----------------------------|
+| Header drawing         | pdf-draw/header.draw.ts     |
+| Analytics summary/map  | pdf-draw/summary.draw.ts    |
+| Panel/image section    | pdf-draw/panel-section.draw.ts |
+| Table rendering        | pdf-draw/tables.draw.ts     |
+| Footer drawing         | pdf-draw/footer.draw.ts     |
+| Detection rectangles   | pdf-draw/detection.draw.ts  |
+| Analytics/statistics   | pdf-utils/analytics.util.ts |
+| Image/map helpers      | pdf-utils/image.util.ts     |
+| Color logic            | pdf-utils/color.util.ts     |
+| Types/interfaces       | pdf-utils/types.ts          |
+| Config/constants       | pdf.config.ts               |
+| Main orchestration     | pdf.service.ts              |
+
+
+6. NEXT STEPS
+--------------
+1. Review and approve this plan.
+2. Begin with constants/types extraction, then utilities, then drawing, then refactor the service.
+3. Test after each step. 

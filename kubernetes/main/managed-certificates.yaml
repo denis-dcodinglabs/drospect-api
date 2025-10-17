@@ -1,0 +1,15 @@
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: dns-authz-drospect-ai
+spec:
+  domains:
+    - drospect.ai
+---
+apiVersion: networking.gke.io/v1
+kind: ManagedCertificate
+metadata:
+  name: dns-authz-www-drospect-ai
+spec:
+  domains:
+    - www.drospect.ai

@@ -1,0 +1,45 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: app-ingress
+  annotations:
+    kubernetes.io/ingress.class: "nginx"
+    kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/enable-cors: "true"
+    nginx.ingress.kubernetes.io/cors-allow-origin: "*"
+    nginx.ingress.kubernetes.io/cors-allow-methods: "GET, PUT, POST, DELETE, PATCH, OPTIONS"
+    nginx.ingress.kubernetes.io/cors-allow-headers: "DNT,X-CustomHeader,Keep-Alive,User-Agent,X-Requested-With,If-Modified-Since,Cache-Control,Content-Type,Authorization"
+    kubernetes.io/ingress.global-static-ip-name: "drospect-static-ip"
+
+    # HTTP/2 Configuration for faster uploads
+    nginx.ingress.kubernetes.io/http2: "true"
+    nginx.ingress.kubernetes.io/http2-max-concurrent-streams: "100"
+    nginx.ingress.kubernetes.io/http2-max-field-size: "4k"
+    nginx.ingress.kubernetes.io/http2-max-header-size: "16k"
+
+    cert-manager.io/cluster-issuer: letsencrypt-stage
+    nginx.ingress.kubernetes.io/proxy-body-size: "5g"
+spec:
+  tls:
+    - hosts:
+        - dev.drospect.ai # Your domain
+      secretName: drospect-ai-cert-tls
+  rules:
+    - host: dev.drospect.ai
+      http:
+        paths:
+          - pathType: Prefix
+            path: /api/(.*)
+            backend:
+              service:
+                name: solar-panel-service
+                port:
+                  number: 80
+          - pathType: Prefix
+            path: /(.*)
+            backend:
+              service:
+                name: solar-panel-frontend-service
+                port:
+                  number: 80

@@ -1,0 +1,94 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solar-panel-web
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solar-panel-web
+  template:
+    metadata:
+      labels:
+        app: solar-panel-web
+    spec:
+      containers:
+        - name: solar-panel-web
+          image: gcr.io/non-prod-environments/solar-panel-web-be:latest
+          ports:
+            - containerPort: 8080
+          env:
+            - name: DATABASE_URL
+              valueFrom:
+                secretKeyRef:
+                  name: app-env-secret
+                  key: DATABASE_URL
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: app-env-secret
+                  key: JWT_SECRET
+            - name: JWT_EXPIRES_IN
+              valueFrom:
+                secretKeyRef:
+                  name: app-env-secret
+                  key: JWT_EXPIRES_IN
+            - name: EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: app-env-secret
+                  key: EMAIL
+            - name: APP_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: app-env-secret
+                  key: APP_PASSWORD
+            - name: DESTINATION_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  name: app-env-secret
+                  key: DESTINATION_EMAIL
+            - name: GCS_BUCKET_NAME
+              valueFrom:
+                secretKeyRef:
+                  name: app-env-secret
+                  key: GCS_BUCKET_NAME
+            - name: GCS_PROJECT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: app-env-secret
+                  key: GCS_PROJECT_ID
+            - name: GCS_KEYFILE_PATH
+              value: "./solar-panel-detection-1-f9e8755e78a3.json"
+            - name: REACT_APP_BASEURL
+              valueFrom:
+                secretKeyRef:
+                  name: my-app-secrets
+                  key: REACT_APP_BASEURL
+            - name: API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: python-api-key
+                  key: API_KEY
+            - name: STRIPE_SERVER_SECRET_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-secret-key
+                  key: STRIPE_SERVER_SECRET_KEY
+            - name: IMAGE_INSPECTION_API_URL
+              valueFrom:
+                secretKeyRef:
+                  name: image-inspection-api-secret
+                  key: IMAGE_INSPECTION_API_URL
+            - name: SKIP_EMAILS
+              value: "true"
+            - name: MAPBOX_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: mapbox-token-secret
+                  key: MAPBOX_TOKEN
+            - name: GEOAPIFY_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: geoapify-api-secret
+                  key: GEOAPIFY_API_KEY

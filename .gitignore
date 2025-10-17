@@ -1,0 +1,8 @@
+/node_modules
+/src/FE/node_modules
+/src/FE/build
+/dist
+*.env*
+stage-key.json
+solar-panel-detection-*.json
+gcr-access-sa-key.json

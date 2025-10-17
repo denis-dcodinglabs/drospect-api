@@ -1,0 +1,13 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: stage-cert
+  namespace: default
+spec:
+  secretName: stage-cert-secret
+  issuerRef:
+    name: letsencrypt-stage
+    kind: ClusterIssuer
+  commonName: dev.drospect.ai
+  dnsNames:
+    - dev.drospect.ai

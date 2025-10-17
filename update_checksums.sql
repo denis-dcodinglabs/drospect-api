@@ -1,0 +1,2 @@
+UPDATE "_prisma_migrations" SET checksum='123dc52a5b74cb020f979e81179daeb66a9f6e04e17fa427f77e1487bd58a296' WHERE migration_name='20250115000000_add_image_statistics_to_drospect_inspection';
+UPDATE "_prisma_migrations" SET checksum='e6cf90942f87a2b9620fa3a2075457fe50676aae2fb899f394f30e30f5e9af1b' WHERE migration_name='20250611152359_add_scopito_inspection'; 

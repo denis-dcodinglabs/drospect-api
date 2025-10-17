@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: solar-panel-frontend
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: solar-panel-frontend
+  template:
+    metadata:
+      labels:
+        app: solar-panel-frontend
+    spec:
+      containers:
+        - name: solar-panel-frontend
+          image: gcr.io/non-prod-environments/solar-panel-web-fe:latest
+          ports:
+            - containerPort: 3000
+          env:
+            - name: REACT_APP_BASEURL
+              valueFrom:
+                secretKeyRef:
+                  name: my-app-secrets
+                  key: REACT_APP_BASEURL
+            - name: REACT_APP_STRIPE_PUBLISHABLE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: stripe-publishable-key
+                  key: REACT_APP_STRIPE_PUBLISHABLE_KEY
+            - name: REACT_APP_MAPBOX_TOKEN
+              valueFrom:
+                secretKeyRef:
+                  name: mapbox-token-secret
+                  key: MAPBOX_TOKEN

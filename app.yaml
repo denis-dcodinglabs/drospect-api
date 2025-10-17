@@ -1,0 +1,23 @@
+service: backend
+runtime: nodejs20
+instance_class: F1
+runtime_config:
+  nodejs_version: '20.9.0'
+automatic_scaling:
+  target_cpu_utilization: 0.65
+  min_instances: 1
+  max_instances: 10
+env_variables:
+  DATABASE_URL: 'postgresql://postgres:drospect2024@34.69.208.90:5432/solar-panel-dev'
+  JWT_SECRET: 'secretKey'
+  JWT_EXPIRES_IN: '2000000'
+  EMAIL: 'info@drospect.ai'
+  APP_PASSWORD: 'idsp iymk zewc lgpx'
+  DESTINATION_EMAIL: 'info@drospect.ai'
+
+  GCS_BUCKET_NAME: solar-panel-detection-1.appspot.com
+  GCS_KEYFILE_PATH: './solar-panel-detection-1-f9e8755e78a3.json'
+  GCS_PROJECT_ID: 489128681655
+  CORS_ORIGIN: 'https://www.drospect.ai'
+  API_KEY: '6y3nFGMhntWHrSK5AslK4snrolgZVCuvxbGaRm9QjmY='
+entrypoint: /bin/bash -c "npm run start:prod"

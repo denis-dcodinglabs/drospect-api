@@ -1,0 +1,57 @@
+PDF Report Issues and Solutions
+==============================
+
+1. Not All Images/Maps Are Displayed (Only 3 of 5 Shown)
+--------------------------------------------------------
+**Problem:**
+- There are 5 unhealthy images, but only 3 image/map pairs are shown on the second page of the PDF.
+- Some images/maps are missing from the report.
+
+**Solution Plan:**
+- Review the logic that determines when to add a new page and how many image sections fit per page.
+- Ensure the section height calculation matches the actual rendered content, especially when panel info varies in length.
+- After adding a new page, reset the Y position (`doc.y`) to just below the header and frame.
+- Add debug logging for Y position before and after each section to verify correct placement.
+- Test with different numbers of images to ensure all are rendered.
+
+2. Detection Rectangles Are Misaligned ("All Over the Place")
+-------------------------------------------------------------
+**Problem:**
+- The rectangles that highlight faults on the images do not match the actual panel locations.
+- Rectangles are misplaced, possibly due to incorrect scaling or coordinate conversion.
+
+**Solution Plan:**
+- Fetch the actual dimensions (width and height) of each image before drawing rectangles.
+- Use these dimensions to scale the detection rectangle coordinates correctly.
+- If the image is resized to fit the PDF, calculate the scaling factor and offset, and apply it to the rectangle coordinates.
+- Add debug logging to compare expected vs. actual rectangle positions.
+- Test with images of different sizes and aspect ratios.
+
+3. Panel Info Leaks Over to the Next Image
+------------------------------------------
+**Problem:**
+- When there are more than 3 panel issues, the panel info for one image overflows into the next image's section.
+- Panel info is not properly contained within its section, causing overlap.
+
+**Solution Plan:**
+- Ensure that after rendering each panel section, the Y position (`doc.y`) is updated by the full height of the section, including variable panel info length.
+- In `drawPanelSection`, after calling `drawCleanPanelTable`, use the returned Y value to set `doc.y` for the next section.
+- Dynamically calculate the section height based on the number of panels and adjust page breaks accordingly.
+- Add debug logging to verify that each section is fully contained and does not overlap with the next.
+
+4. Remove Header on Second Page and Onward
+-----------------------------------------
+**Problem:**
+- The header is currently rendered on every page, which is repetitive and does not add useful information for the user after the first page.
+
+**Solution Plan:**
+- Only render the header on the first page of the PDF report.
+- For subsequent pages, skip the header rendering step.
+- Adjust the Y position and frame drawing logic accordingly so content starts at the correct position on all pages.
+- Test to ensure the first page has the header and all other pages do not.
+
+---
+
+**Approach:**
+- Tackle each issue one by one, starting with the image/map display issue, then fixing detection rectangle alignment, and finally addressing panel info overflow.
+- After each fix, test with a variety of data to ensure robustness. 

@@ -1,0 +1,195 @@
+@import "mapbox-gl/dist/mapbox-gl.css";
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Leaflet CSS */
+@import "leaflet/dist/leaflet.css";
+
+/* Mapbox marker fixes */
+.mapboxgl-marker {
+  will-change: transform;
+  position: absolute !important;
+}
+
+.mapboxgl-marker .custom-marker {
+  pointer-events: auto;
+  user-select: none;
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  position: relative;
+  display: block;
+  transition: opacity 0.2s ease, filter 0.2s ease;
+}
+
+.mapboxgl-marker .custom-marker:hover {
+  transform: none !important;
+  position: relative !important;
+}
+
+.mapboxgl-canvas-container {
+  cursor: grab;
+}
+
+.mapboxgl-canvas-container:active {
+  cursor: grabbing;
+}
+
+/* fonts */
+@layer base {
+  @font-face {
+    font-family: "Montserrat";
+    src: url("../public/fonts/Montserrat/Montserrat-Regular.ttf");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  @font-face {
+    font-family: "Raleway";
+    src: url("../public/fonts/Raleway/Raleway-Regular.ttf");
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  .font-montserrat {
+    font-family: "Montserrat";
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  .font-raleway {
+    font-family: "Raleway";
+    font-weight: normal;
+    font-style: normal;
+  }
+
+  /* css */
+  body {
+    padding: 0;
+    margin: 0;
+    font-family: "Raleway", sans-serif;
+
+    background: #100b20;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4,
+  h5,
+  h6 {
+    font-family: "Montserrat", sans-serif;
+  }
+}
+
+/* COG Tile Viewer Styles */
+.leaflet-container {
+  font-family: inherit;
+}
+
+.leaflet-popup-content-wrapper {
+  border-radius: 8px;
+}
+
+.leaflet-popup-tip {
+  border-radius: 2px;
+}
+
+/* Custom scrollbar for controls */
+.scrollbar-thin {
+  scrollbar-width: thin;
+}
+
+.scrollbar-thumb-gray-300::-webkit-scrollbar-thumb {
+  background-color: #d1d5db;
+}
+
+.scrollbar-track-gray-100::-webkit-scrollbar-track {
+  background-color: #f3f4f6;
+}
+
+/* Custom scrollbar for thermal processing - always visible and white */
+.thermal-scrollbar::-webkit-scrollbar {
+  width: 8px;
+}
+
+.thermal-scrollbar::-webkit-scrollbar-track {
+  background: #4b5563;
+  border-radius: 4px;
+}
+
+.thermal-scrollbar::-webkit-scrollbar-thumb {
+  background: #ffffff;
+  border-radius: 4px;
+  border: 1px solid #6b7280;
+}
+
+.thermal-scrollbar::-webkit-scrollbar-thumb:hover {
+  background: #f3f4f6;
+}
+
+.thermal-scrollbar {
+  scrollbar-width: auto;
+  scrollbar-color: #ffffff #4b5563;
+}
+
+/* Ensure map fills container properly */
+.cog-viewer-map {
+  height: 100%;
+  width: 100%;
+  z-index: 1;
+}
+
+/* Fix for Leaflet marker icons */
+.leaflet-marker-icon {
+  margin-left: -12px !important;
+  margin-top: -41px !important;
+}
+
+/* Custom range slider styling */
+input[type="range"] {
+  -webkit-appearance: none;
+  appearance: none;
+  cursor: pointer;
+}
+
+input[type="range"]::-webkit-slider-track {
+  background: #374151;
+  height: 8px;
+  border-radius: 4px;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  appearance: none;
+  background: #3b82f6;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+input[type="range"]::-webkit-slider-thumb:hover {
+  background: #2563eb;
+  transform: scale(1.1);
+}
+
+input[type="range"]::-moz-range-track {
+  background: #374151;
+  height: 8px;
+  border-radius: 4px;
+  border: none;
+}
+
+input[type="range"]::-moz-range-thumb {
+  background: #3b82f6;
+  height: 20px;
+  width: 20px;
+  border-radius: 50%;
+  border: 2px solid #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
