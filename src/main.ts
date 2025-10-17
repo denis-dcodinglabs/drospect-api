@@ -13,7 +13,7 @@ async function bootstrap() {
       transform: true,
       whitelist: true,
       stopAtFirstError: true,
-    }),
+    })
   );
   app.useGlobalFilters(new HttpExceptionFilter()); // Apply the custom exception filter
 
@@ -24,7 +24,7 @@ async function bootstrap() {
 
   const corsOrigins = process.env.CORS_ORIGIN
     ? process.env.CORS_ORIGIN.split(",")
-    : ["http://localhost:3000"];
+    : ["https://drospect-fe.caprover-root.drospect.ai/"];
   const cors = {
     origin: corsOrigins,
     methods: "GET,HEAD,PUT,PATCH,POST,DELETE,OPTIONS",
@@ -40,7 +40,7 @@ async function bootstrap() {
   // Apply middleware for large payloads on the specific route
   app.use(
     "/api/projects/upload",
-    largePayloadMiddleware.use.bind(largePayloadMiddleware),
+    largePayloadMiddleware.use.bind(largePayloadMiddleware)
   );
 
   // Apply raw body parser for Stripe webhooks before global JSON parser
